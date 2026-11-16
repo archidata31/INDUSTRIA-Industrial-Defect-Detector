@@ -1,0 +1,6 @@
+{
+    "threshold": 0.0023053347831591964,
+    "percentile": 90,
+    "number_of_images": 4,
+    "calibration_type": "normal_validation_only"
+}
