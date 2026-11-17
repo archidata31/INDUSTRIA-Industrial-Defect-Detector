@@ -852,139 +852,196 @@ function App() {
   // ANALYTICS PAGE
   // -------------------------------
 
-  const renderAnalytics = () => (
-    <>
-      <header className="page-header">
+  
+const renderAnalytics = () => (
+  <>
+    <header className="page-header">
+      <div>
+        <p className="eyebrow">WORKSPACE / ANALYTICS</p>
+        <h1>Quality Analytics</h1>
+        <p>
+          Understand inspection results and evaluate model performance.
+        </p>
+      </div>
+    </header>
+
+    <section className="stats-grid">
+      <div className="stat-card accent-blue">
+        <div className="stat-card-heading">
+          <div className="stat-icon"><ScanSearch size={21} /></div>
+          <span className="stat-label">TOTAL INSPECTIONS</span>
+        </div>
+        <div className="stat-value">{totalInspections}</div>
+        <div className="stat-bottom">All recorded inspections</div>
+      </div>
+
+      <div className="stat-card accent-green">
+        <div className="stat-card-heading">
+          <div className="stat-icon"><CheckCircle2 size={21} /></div>
+          <span className="stat-label">NORMAL PRODUCTS</span>
+        </div>
+        <div className="stat-value">{normalCount}</div>
+        <div className="stat-bottom">Passed inspection</div>
+      </div>
+
+      <div className="stat-card accent-red">
+        <div className="stat-card-heading">
+          <div className="stat-icon"><AlertTriangle size={21} /></div>
+          <span className="stat-label">DEFECTIVE PRODUCTS</span>
+        </div>
+        <div className="stat-value">{defectiveCount}</div>
+        <div className="stat-bottom">Flagged for review</div>
+      </div>
+
+      <div className="stat-card accent-orange">
+        <div className="stat-card-heading">
+          <div className="stat-icon"><Target size={21} /></div>
+          <span className="stat-label">DEFECT RATE</span>
+        </div>
+        <div className="stat-value">{defectRate}<small>%</small></div>
+        <div className="stat-bottom">Of recorded inspections</div>
+      </div>
+    </section>
+
+    {/* MODEL EVALUATION */}
+    <section className="panel model-evaluation-panel">
+      <div className="panel-heading">
         <div>
-          <p className="eyebrow">WORKSPACE / ANALYTICS</p>
-          <h1>Quality Analytics</h1>
-          <p>Understand the results of your recorded inspections.</p>
+          <span className="panel-kicker">MODEL PERFORMANCE</span>
+          <h2>Model Evaluation</h2>
+          <p>Performance measured using the MVTec AD Bottle test data.</p>
         </div>
-      </header>
+        <div className="panel-icon">
+          <Target size={20} />
+        </div>
+      </div>
 
-      <section className="stats-grid">
-        <div className="stat-card accent-blue">
-          <div className="stat-card-heading">
-            <div className="stat-icon"><ScanSearch size={21} /></div>
-            <span className="stat-label">TOTAL INSPECTIONS</span>
+      <div className="auc-card">
+        <span>ROC-AUC SCORE</span>
+        <strong>0.6101</strong>
+        <p>Area Under the Receiver Operating Characteristic Curve</p>
+      </div>
+
+      <div className="roc-section">
+        <div className="roc-heading">
+          <div>
+            <h3>ROC Curve</h3>
+            <p>True Positive Rate vs False Positive Rate</p>
           </div>
-          <div className="stat-value">{totalInspections}</div>
-          <div className="stat-bottom">All recorded inspections</div>
+          <span className="roc-tag">MVTec AD · Bottle</span>
         </div>
 
-        <div className="stat-card accent-green">
-          <div className="stat-card-heading">
-            <div className="stat-icon"><CheckCircle2 size={21} /></div>
-            <span className="stat-label">NORMAL PRODUCTS</span>
+        <img
+          src="/roc_curve.png"
+          alt="ROC Curve for INDUSTRIA industrial defect detection model"
+          className="roc-image"
+        />
+
+        <p className="roc-note">
+          The diagonal dashed line represents random classification.
+          The blue curve represents the evaluated model.
+        </p>
+      </div>
+    </section>
+
+    {/* EXISTING ANALYTICS CHARTS */}
+    <section className="dashboard-grid">
+      <div className="panel distribution-panel">
+        <div className="panel-heading">
+          <div>
+            <span className="panel-kicker">QUALITY BREAKDOWN</span>
+            <h2>Product Classification</h2>
+            <p>Distribution across recorded inspections</p>
           </div>
-          <div className="stat-value">{normalCount}</div>
-          <div className="stat-bottom">Passed inspection</div>
         </div>
 
-        <div className="stat-card accent-red">
-          <div className="stat-card-heading">
-            <div className="stat-icon"><AlertTriangle size={21} /></div>
-            <span className="stat-label">DEFECTIVE PRODUCTS</span>
-          </div>
-          <div className="stat-value">{defectiveCount}</div>
-          <div className="stat-bottom">Flagged for review</div>
-        </div>
-
-        <div className="stat-card accent-orange">
-          <div className="stat-card-heading">
-            <div className="stat-icon"><Target size={21} /></div>
-            <span className="stat-label">DEFECT RATE</span>
-          </div>
-          <div className="stat-value">{defectRate}<small>%</small></div>
-          <div className="stat-bottom">Of all recorded inspections</div>
-        </div>
-      </section>
-
-      <section className="dashboard-grid">
-        <div className="panel distribution-panel">
-          <div className="panel-heading">
-            <div>
-              <span className="panel-kicker">QUALITY BREAKDOWN</span>
-              <h2>Product Classification</h2>
-              <p>Distribution across all recorded inspections</p>
+        <div className="distribution-content">
+          <div
+            className="donut-chart"
+            style={{
+              background: totalInspections === 0
+                ? "conic-gradient(#283341 0deg 360deg)"
+                : `conic-gradient(#22c58b 0deg ${
+                    normalCount / totalInspections * 360
+                  }deg, #f05b63 ${
+                    normalCount / totalInspections * 360
+                  }deg 360deg)`
+            }}
+          >
+            <div className="donut-inner">
+              <strong>{totalInspections}</strong>
+              <span>INSPECTED</span>
             </div>
           </div>
 
-          <div className="distribution-content">
-            <div
-              className="donut-chart"
-              style={{
-                background: totalInspections === 0
-                  ? "conic-gradient(#283341 0deg 360deg)"
-                  : `conic-gradient(#22c58b 0deg ${normalCount / totalInspections * 360}deg, #f05b63 ${normalCount / totalInspections * 360}deg 360deg)`
-              }}
-            >
-              <div className="donut-inner">
-                <strong>{totalInspections}</strong>
-                <span>INSPECTED</span>
+          <div className="distribution-legend">
+            <div className="legend-item">
+              <span className="legend-dot green-dot"></span>
+              <div>
+                <strong>{normalCount}</strong>
+                <span>Normal products</span>
               </div>
             </div>
-
-            <div className="distribution-legend">
-              <div className="legend-item">
-                <span className="legend-dot green-dot"></span>
-                <div><strong>{normalCount}</strong><span>Normal products</span></div>
-              </div>
-              <div className="legend-item">
-                <span className="legend-dot red-dot"></span>
-                <div><strong>{defectiveCount}</strong><span>Defective products</span></div>
+            <div className="legend-item">
+              <span className="legend-dot red-dot"></span>
+              <div>
+                <strong>{defectiveCount}</strong>
+                <span>Defective products</span>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="panel trend-panel">
-          <div className="panel-heading">
-            <div>
-              <span className="panel-kicker">MODEL METRICS</span>
-              <h2>Anomaly Score Trend</h2>
-              <p>Latest seven recorded scores</p>
-            </div>
+      <div className="panel trend-panel">
+        <div className="panel-heading">
+          <div>
+            <span className="panel-kicker">INSPECTION METRICS</span>
+            <h2>Anomaly Score Trend</h2>
+            <p>Latest seven recorded scores</p>
           </div>
+        </div>
 
-          {validScores.length === 0 ? (
-            <div className="chart-empty">
-              <Activity size={30} />
-              <p>No score data available yet.</p>
-            </div>
-          ) : (
-            <div className="score-chart">
-              {history.slice(0, 7).reverse().map((item) => {
-                const value = Number(item.anomaly_score);
-                const height = Number.isFinite(value)
-                  ? Math.max((value / maxScore) * 100, 5)
-                  : 5;
+        {validScores.length === 0 ? (
+          <div className="chart-empty">
+            <Activity size={30} />
+            <p>No score data available yet.</p>
+          </div>
+        ) : (
+          <div className="score-chart">
+            {history.slice(0, 7).reverse().map((item) => {
+              const value = Number(item.anomaly_score);
+              const height = Number.isFinite(value)
+                ? Math.max((value / maxScore) * 100, 5)
+                : 5;
 
-                return (
-                  <div className="score-bar-column" key={item.id}>
-                    <span className="bar-value">
-                      {Number.isFinite(value) ? value.toFixed(4) : "--"}
-                    </span>
-                    <div className="bar-track">
-                      <div
-                        className={`score-bar ${
-                          item.classification === "Defective"
-                            ? "bar-defective"
-                            : "bar-normal"
-                        }`}
-                        style={{ height: `${height}%` }}
-                      ></div>
-                    </div>
-                    <span className="bar-label">#{String(item.id).slice(-4)}</span>
+              return (
+                <div className="score-bar-column" key={item.id}>
+                  <span className="bar-value">
+                    {Number.isFinite(value) ? value.toFixed(4) : "--"}
+                  </span>
+                  <div className="bar-track">
+                    <div
+                      className={`score-bar ${
+                        item.classification === "Defective"
+                          ? "bar-defective"
+                          : "bar-normal"
+                      }`}
+                      style={{ height: `${height}%` }}
+                    ></div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </section>
-    </>
-  );
+                  <span className="bar-label">
+                    #{String(item.id).slice(-4)}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </section>
+  </>
+);
 
   // -------------------------------
   // SETTINGS PAGE
